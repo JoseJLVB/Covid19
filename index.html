@@ -11,6 +11,31 @@
     <title>Paises con Covid19</title>
   </head>
   <body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center p-5">
+          <div class="col-md-12">
+            <h3 class="text-center">
+              Covid19 by the Dinosaurs Group
+            </h3>
+          </div>
+            <div class="col-md-6 d-block" id="main-form">
+                <form id="js-form">
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input type="email" class="form-control" aria-describedby="emailHelp" id="email-input">
+                    </div>
+                    <div class="form-group">
+                      <label>Password</label>
+                      <input type="password" class="form-control" id="pass-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+
+
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand ms-3" href="#">Covid19</a>
@@ -31,27 +56,120 @@
     </nav>
 
     <script>
-        window.onload = function () {
+    const dataGrafico = [
+        {
+            location: 'US',
+            confirmed: 61556085,
+            deaths: 839500,
+            recovered: 0,
+            active: 0,
+        },
+        {
+            location: 'India',
+            confirmed: 35875790,
+            deaths: 484213,
+            recovered: 0,
+            active: 0,
+        },
+        {
+            location: 'Brazil',
+            confirmed: 22563104,
+            deaths: 620366,
+            recovered: 0,
+            active: 0,
+        },
+        {
+            location: 'United Kingdom',
+            confirmed: 14708999,
+            deaths: 150712,
+            recovered: 0,
+            active: 0,
+        },
+        {
+            location: 'France',
+            confirmed: 12311963,
+            deaths: 126707,
+            recovered: 0,
+            active: 0,
+        },
+        {
+            location: 'Russia',
+            confirmed: 10485705,
+            deaths: 310513,
+            recovered: 0,
+            active: 0,
+        },
+        {
+            location: 'Turkey',
+            confirmed: 10045658,
+            deaths: 83843,
+            recovered: 0,
+            active: 0,
+        },
+        {
+            location: 'Germany',
+            confirmed: 7570361,
+            deaths: 114127,
+            recovered: 0,
+            active: 0,
+        },
+        {
+            location: 'Italy',
+            confirmed: 7554344,
+            deaths: 139265,
+            recovered: 0,
+            active: 0,
+        }
+    ];
+
         
-        var chart = new CanvasJS.Chart("chartContainer", {
+        
+        
+    function iniciarGrafico(dataGrafico){
+        // datapoints
+        const confirmados = []
+        const muertos = []
+        for (pais of dataGrafico){
+            confirmados.push({
+                label: pais.location,
+                y: pais.confirmed                
+            })
+            muertos.push({
+                label: pais.location,
+                y: pais.deaths
+            }
+
+            )
+        }
+
+        const covidData = [
+            {
+                type: "column",
+                name: "Casos Muertos",
+                legendText: "Casos Muertos",
+                showInLegend: true, 
+                dataPoints: muertos
+            },
+            {
+                type: "column",
+                name: "Casos Confirmados",
+                legendText: "Casos Confirmados",
+                showInLegend: true, 
+                dataPoints: confirmados
+            }
+        ]
+
+        const chart = new CanvasJS.Chart("chartContainer", {
             animationEnabled: true,
             title:{
-                text: "Crude Oil Reserves vs Production, 2016"
+                text: "Países con Covid19"
             },	
-            axisY: {
-                title: "Billions of Barrels",
+            axisY: {                    
                 titleFontColor: "#4F81BC",
                 lineColor: "#4F81BC",
                 labelFontColor: "#4F81BC",
                 tickColor: "#4F81BC"
-            },
-            axisY2: {
-                title: "Millions of Barrels/day",
-                titleFontColor: "#C0504E",
-                lineColor: "#C0504E",
-                labelFontColor: "#C0504E",
-                tickColor: "#C0504E"
-            },	
+            },                
             toolTip: {
                 shared: true
             },
@@ -59,50 +177,12 @@
                 cursor:"pointer",
                 itemclick: toggleDataSeries
             },
-            data: [{
-                type: "column",
-                name: "Proven Oil Reserves (bn)",
-                legendText: "Proven Oil Reserves",
-                showInLegend: true, 
-                dataPoints:[
-                    { label: "Saudi", y: 266.21 },
-                    { label: "Venezuela", y: 302.25 },
-                    { label: "Iran", y: 157.20 },
-                    { label: "Iraq", y: 148.77 },
-                    { label: "Kuwait", y: 101.50 },
-                    { label: "UAE", y: 97.8 }
-                ]
-            },
-            {
-                type: "column",	
-                name: "Oil Production (million/day)",
-                legendText: "Oil Production",
-                axisYType: "secondary",
-                showInLegend: true,
-                dataPoints:[
-                    { label: "Saudi", y: 10.46 },
-                    { label: "Venezuela", y: 2.27 },
-                    { label: "Iran", y: 3.99 },
-                    { label: "Iraq", y: 4.45 },
-                    { label: "Kuwait", y: 2.92 },
-                    { label: "UAE", y: 3.1 }
-                ]
-            }]
+            data: covidData
         });
         chart.render();
-        
-        function toggleDataSeries(e) {
-            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-            }
-            else {
-                e.dataSeries.visible = true;
-            }
-            chart.render();
-        }
-        
-        }
-        </script>
+    }
+
+    </script>
     <div id="chartContainer" style="height: 300px; width: 100%;"></div>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
