@@ -27,8 +27,19 @@ async function getAllCountriesData() {
   try {
     const response = await fetch('http://localhost:3000/api/total');
     const data = await response.json();
-    // console.log(data.data);
+    return data.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
+// funcion para traer data de un pais, retorna array de objetos
+async function getCountryData(country) {
+  try {
+    const response = await fetch(
+      ` http://localhost:3000/api/countries/${country}`
+    );
+    const data = await response.json();
     return data.data;
   } catch (error) {
     console.error(error);
@@ -57,7 +68,7 @@ function renderTabla(dataCounries) {
   dataCounries.forEach((country) => {
     $('#tabla-body').append(`
         <tr>
-            <th scope="row">${country.location}</th>
+            <th scope="row"> <div class="d-flex"><p class="mr-3">${country.location}</p><a class="link-primary link-modal" href="#" data-country=${country.location}>Ver detalle..</a></div></th>
             <td>${country.confirmed}</td>
             <td>${country.recovered}</td>
             <td>${country.active}</td>
@@ -65,10 +76,33 @@ function renderTabla(dataCounries) {
         </tr>
     `);
   });
+
+  dataLink();
+}
+//funcion para abrir modal
+function dataLink() {
+  try {
+    $('.link-modal').on('click', async function (event) {
+      const country = $(this).attr('data-country');
+
+      const dataCountry = await getCountryData(country);
+
+      console.log(dataCountry);
+
+      $('#country-modal').modal('show');
+      // $('.modal-body').html(
+      //   `<div id="chartContainer-country" style="height: 100%; width: 100%;"></div>`
+      // );
+
+      iniciarGrafico([dataCountry], 'chartContainer-country');
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 // funcion para renderizar el grafico
-function iniciarGrafico(dataGrafico) {
+function iniciarGrafico(dataGrafico, container = 'chartContainer') {
   // datapoints
   const confirmados = [];
   const muertos = [];
@@ -100,7 +134,7 @@ function iniciarGrafico(dataGrafico) {
     },
   ];
 
-  const chart = new CanvasJS.Chart('chartContainer', {
+  const chart = new CanvasJS.Chart(container, {
     animationEnabled: true,
     title: {
       text: 'Países con Covid19',
@@ -119,6 +153,15 @@ function iniciarGrafico(dataGrafico) {
     },
     data: covidData,
   });
+
+  console.log(chart.width, chart.height);
+
+  chart.width = +chart.width + 40;
+  chart.height = +chart.height + 40;
+
+  $('.modal-dialog').css('max-width', chart.width);
+  $('.modal-content').css('height', chart.height);
+
   chart.render();
 }
 
