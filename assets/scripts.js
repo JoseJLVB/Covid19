@@ -134,10 +134,13 @@ function iniciarGrafico(dataGrafico, container = 'chartContainer') {
     },
   ];
 
+  let tituloGrafico = "Países con Covid19" 
+  if (dataGrafico.length == 1) tituloGrafico = dataGrafico[0].location
+  console.log(dataGrafico)
   const chart = new CanvasJS.Chart(container, {
     animationEnabled: true,
     title: {
-      text: 'Países con Covid19',
+      text: tituloGrafico,
     },
     axisY: {
       titleFontColor: '#4F81BC',
@@ -198,3 +201,33 @@ $('#login-form').on('submit', async function (event) {
     console.error(error);
   }
 });
+//logout button
+$("#logout").on("click", function () {
+    localStorage.removeItem("token");
+    window.location.reload()
+});
+
+(async function init () {
+    const token = localStorage.getItem("token");
+    if (token == null ) {
+        return
+    }
+    else {
+        try {            
+            domLogin();
+        
+            // render del grafico
+            const graficoData = await moreThan10000();
+            iniciarGrafico(graficoData);
+        
+            // render tabla
+            const tablaData = await getAllCountriesData();
+            renderTabla(tablaData);
+            } catch (error) {
+                console.log('Error');
+                console.error(error);
+            }
+    }
+})();
+
+
